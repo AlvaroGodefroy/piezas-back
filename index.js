@@ -24,6 +24,24 @@ app.use(
 app.get('/', (req, res) => {
     res.json({ info: 'Node.js, Express, and Postgres API' })
   })
+  app.get('/users', db.getUsers)
+app.get('/users/:id', db.getUserById)
+app.post('/users', db.createUser)
+app.post('/usersLogin', db.getUserLogin)
+app.put('/users/:id', db.updateUser)
+app.delete('/users/:id', db.deleteUser)
+
+app.get('/categories', db.getCategories)
+app.get('/categories/:id', db.getCategoryById)
+app.post('/categories', db.createCategory)
+app.put('/categories/:id', db.updateCategory)
+app.delete('/categories/:id', db.deleteCategory)
+
+app.get('/products', db.getProducts)
+app.get('/products/:id', db.getProductById)
+app.post('/products', db.createProduct)
+app.put('/products/:id', db.updateProduct)
+app.delete('/products/:id', db.deleteProduct)
 
   app.listen(port, () => {
     console.log(`App running on port ${port}.`)
