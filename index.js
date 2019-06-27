@@ -39,7 +39,9 @@ app.get('/getShop',db.getShop)
 app.post('/opinionp', db.createReseña)
 app.get('/getres',db.getReseñas)
 app.post('/verifilog', db.getusudi)
-
+app.post('/updateshop', db.updateshop)
+app.post('/deleteshop', db.deleteshop)
+app.get('/getShop1', db.getShop1)
 
 app.get('/categories', db.getCategories)
 app.get('/categories/:id', db.getCategoryById)

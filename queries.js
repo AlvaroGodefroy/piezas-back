@@ -1,9 +1,9 @@
 const Connection = require('pg').Pool
 const connection = new Connection({
-  user: 'ehbctmvfhkqqgz',
-  host: 'ec2-54-83-205-27.compute-1.amazonaws.com',
-  database: 'd7u2v9gddd9265',
-  password: '6ec3d0d372fef3acb9f8179f600aa3f064869981d79071b4e8d0add997339217',
+  user: 'idmaqajxsucdsd',
+  host: 'ec2-107-21-216-112.compute-1.amazonaws.com',
+  database: 'dat538a8plk292',
+  password: '483201dbf1a6d8daf432b20a78b3403948e471a9bd892cd816b0e264d83c5cd4',
   port: 5432,
   ssl: true
 })
@@ -104,6 +104,38 @@ const createUser = (request, response) => {
   })
 }
 
+
+const updateshop = (request, response) => {
+  const dsd =  request.body
+  console.log(dsd)
+  connection.query(
+    'UPDATE myshops SET confirmado = 1  WHERE idcompra = $1',    [ dsd.id],
+    (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).send('User modified with ID: ' )
+    }
+  )
+
+
+
+}
+
+const deleteshop = (request, response) => {
+  const dsd =  request.body
+  console.log(dsd)
+  connection.query(
+    'delete from myshops  WHERE idcompra = $1',    [ dsd.id],
+    (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).send('User delete with ID: ' )
+    }
+  )
+}
+
 const updateUser = (request, response) => {
   const id = parseInt(request.params.id)
   const { user_name, first_name, last_name, email, password } = request.body
@@ -183,6 +215,9 @@ const updateCategory = (request, response) => {
   )
 }
 
+
+
+
 const deleteCategory = (request, response) => {
   const id = parseInt(request.params.id)
 
@@ -207,7 +242,16 @@ const getProducts = (request, response) => {
 
 
 const getShop = (request, response) => {
-  connection.query('SELECT * FROM myshops ', (error, results) => {
+  connection.query('SELECT * FROM myshops where confirmado is null', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const getShop1 = (request, response) => {
+  connection.query('SELECT * FROM myshops where confirmado=1 ', (error, results) => {
     if (error) {
       throw error
     }
@@ -253,9 +297,9 @@ const getProductByIdCate = (request, response) => {
 
 
 const createProduct = (request, response) => {
-  const { category_id, nombre, descripcion,precio,urlim } = request.body
+  const { category_id, nombre, descripcion,precio,urlim ,stock} = request.body
 
-  connection.query('INSERT INTO products (category_id, nombre, descripcion,precio,img) VALUES ($1, $2, $3,$4,$5)', [category_id, nombre, descripcion,precio,urlim], (error, results) => {
+  connection.query('INSERT INTO products (category_id, nombre, descripcion,precio,img,stock) VALUES ($1, $2, $3,$4,$5,$6)', [category_id, nombre, descripcion,precio,urlim,stock], (error, results) => {
     if (error) {
       throw error
     }
@@ -264,16 +308,27 @@ const createProduct = (request, response) => {
 }
 
 
-
 const createShop = (request, response) => {
   const { user, productosL,productosP,direccion} = request.body
 
-  connection.query('INSERT INTO myshops (username,products,total,lugar,time) VALUES ($1,$2,$3,$4,5)', [user, productosL,productosP,direccion], (error, results) => {
+  connection.query('select max(COALESCE(idcompra,0))+1 as maxid from myshops', (error, results1) => {
     if (error) {
       throw error
     }
-    response.status(201).json({ val: 'true',user:user })
+    console.log(results1.rows[0 ].maxid)
+    connection.query('INSERT INTO myshops (username,products,total,lugar,idcompra) VALUES ($1,$2,$3,$4,$5)', [user, productosL,productosP,direccion,results1.rows[0].maxid], (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(201).json({ val: 'true' })
+    })
+
+
+
   })
+
+
+
 }
 
 const createReseña = (request, response) => {
@@ -324,11 +379,14 @@ module.exports = {
   deleteUser,
   getUserLogin,
   getUserVerifi,
+  deleteshop,
   createShop,
   getShop,
+  updateshop,
   createReseña,
   getReseñas,
   //categorys
+  getShop1,
   getCategories,
   getCategoryById,
   createCategory,
