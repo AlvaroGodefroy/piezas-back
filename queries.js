@@ -1,5 +1,4 @@
 const Connection = require('pg').Pool
-export let host = 'ec2-107-21-216-112.compute-1.amazonaws.com'
 const connection = new Connection({
   user: 'idmaqajxsucdsd',
   host: 'ec2-107-21-216-112.compute-1.amazonaws.com',
