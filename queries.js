@@ -1,7 +1,8 @@
 const Connection = require('pg').Pool
+export let host = 'ec2-107-21-216-112.compute-1.amazonaws.com'
 const connection = new Connection({
   user: 'idmaqajxsucdsd',
-  host: 'ec2-107-21-216-112.compute-1.amazonaws.com',
+  host: host,
   database: 'dat538a8plk292',
   password: '483201dbf1a6d8daf432b20a78b3403948e471a9bd892cd816b0e264d83c5cd4',
   port: 5432,
